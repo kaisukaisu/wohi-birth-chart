@@ -24,14 +24,14 @@ function BirthChartForm({ onDataFetched }) {
   const parseNum = (v) => parseFloat(String(v).replace(',', '.'));
   const getErrors = () => {
     const errs = {};
-    if (!formData.date) errs.date = 'Valitse päivämäärä';
-    if (!formData.time) errs.time = 'Valitse kellonaika';
+    if (!formData.date) errs.date = 'Select a date';
+    if (!formData.time) errs.time = 'Select a time';
     const lat = parseNum(formData.latitude);
     const lon = parseNum(formData.longitude);
-    if (Number.isNaN(lat)) errs.latitude = 'Anna leveysaste numerona';
-    else if (lat < -90 || lat > 90) errs.latitude = 'Leveysaste oltava -90 … 90';
-    if (Number.isNaN(lon)) errs.longitude = 'Anna pituusaste numerona';
-    else if (lon < -180 || lon > 180) errs.longitude = 'Pituusaste oltava -180 … 180';
+    if (Number.isNaN(lat)) errs.latitude = 'Enter latitude as a number';
+    else if (lat < -90 || lat > 90) errs.latitude = 'Latitude must be -90 … 90';
+    if (Number.isNaN(lon)) errs.longitude = 'Enter longitude as a number';
+    else if (lon < -180 || lon > 180) errs.longitude = 'Longitude must be -180 … 180';
     return errs;
   };
 
@@ -41,7 +41,7 @@ function BirthChartForm({ onDataFetched }) {
   const handleUseLocation = async () => {
     setError(null);
     if (!navigator.geolocation) {
-      setError('Sijaintipalvelu ei ole käytettävissä tällä laitteella.');
+      setError('Location service is not available on this device.');
       return;
     }
     setLoading(true);
@@ -56,7 +56,7 @@ function BirthChartForm({ onDataFetched }) {
         setLoading(false);
       },
       (geoErr) => {
-        setError('Sijainnin haku epäonnistui. Salli sijainti ja yritä uudelleen.');
+        setError('Location retrieval failed. Allow location access and try again.');
         setLoading(false);
       },
       { enableHighAccuracy: true, timeout: 10000 }
@@ -172,7 +172,7 @@ function BirthChartForm({ onDataFetched }) {
       }
     } catch (err) {
       console.error('API error:', err.response?.data || err.message);
-      setError('API-haussa tapahtui virhe. Katso konsoli lisätiedoista.');
+      setError('An error occurred in the API request. Check the console for more details.');
     } finally {
       setLoading(false);
     }
@@ -181,12 +181,19 @@ function BirthChartForm({ onDataFetched }) {
   return (
     <section className='container text-center justify-content-center'>
       <form onSubmit={handleSubmit} noValidate style={{ 
-        maxWidth: 720, margin: '0 auto', padding: '1rem', background: '#fff',
+        maxWidth: 720, 
+        margin: '0 auto', 
+        padding: '2rem', 
+        background: 'rgba(26, 26, 46, 0.6)',
+        backdropFilter: 'blur(10px)',
+        border: '1px solid rgba(108, 92, 231, 0.3)',
+        borderRadius: '20px',
+        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(108, 92, 231, 0.1)',
       }}>
         <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
           <div>
-            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6 }}>
-              Päivämäärä
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#f8f9fa' }}>
+              Date
             </label>
             <input
               type="date"
@@ -196,17 +203,22 @@ function BirthChartForm({ onDataFetched }) {
               onBlur={handleBlur}
               required
               style={{
-                width: '100%', padding: '0.5rem 0.6rem', borderRadius: 8,
-                border: `1px solid ${touched.date && errors.date ? '#e35d6a' : '#d5d8dc'}`
+                width: '100%', 
+                padding: '0.5rem 0.6rem', 
+                borderRadius: 12,
+                border: `1px solid ${touched.date && errors.date ? 'rgba(231, 93, 106, 0.5)' : 'rgba(108, 92, 231, 0.3)'}`,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#f8f9fa',
+                transition: 'all 0.3s ease'
               }}
             />
             {touched.date && errors.date && (
-              <div style={{ color: '#b3261e', fontSize: 12, marginTop: 4 }}>{errors.date}</div>
+              <div style={{ color: '#ff6b6b', fontSize: 12, marginTop: 4 }}>{errors.date}</div>
             )}
           </div>
           <div>
-            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6 }}>
-              Kellonaika
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#f8f9fa' }}>
+              Time
             </label>
             <input
               type="time"
@@ -216,57 +228,72 @@ function BirthChartForm({ onDataFetched }) {
               onBlur={handleBlur}
               required
               style={{
-                width: '100%', padding: '0.5rem 0.6rem', borderRadius: 8,
-                border: `1px solid ${touched.time && errors.time ? '#e35d6a' : '#d5d8dc'}`
+                width: '100%', 
+                padding: '0.5rem 0.6rem', 
+                borderRadius: 12,
+                border: `1px solid ${touched.time && errors.time ? 'rgba(231, 93, 106, 0.5)' : 'rgba(108, 92, 231, 0.3)'}`,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#f8f9fa',
+                transition: 'all 0.3s ease'
               }}
             />
             {touched.time && errors.time && (
-              <div style={{ color: '#b3261e', fontSize: 12, marginTop: 4 }}>{errors.time}</div>
+              <div style={{ color: '#ff6b6b', fontSize: 12, marginTop: 4 }}>{errors.time}</div>
             )}
           </div>
           <div>
-            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6 }}>
-              Leveysaste (−90…90)
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#f8f9fa' }}>
+              Latitude (−90…90)
             </label>
             <input
               type="text"
               inputMode="decimal"
               name="latitude"
-              placeholder="esim. 60.10"
+              placeholder="e.g. 60.10"
               value={formData.latitude}
               onChange={handleChange}
               onBlur={handleBlur}
               style={{
-                width: '100%', padding: '0.5rem 0.6rem', borderRadius: 8,
-                border: `1px solid ${touched.latitude && errors.latitude ? '#e35d6a' : '#d5d8dc'}`
+                width: '100%', 
+                padding: '0.5rem 0.6rem', 
+                borderRadius: 12,
+                border: `1px solid ${touched.latitude && errors.latitude ? 'rgba(231, 93, 106, 0.5)' : 'rgba(108, 92, 231, 0.3)'}`,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#f8f9fa',
+                transition: 'all 0.3s ease'
               }}
             />
-            <div style={{ color: '#6b7280', fontSize: 12, marginTop: 4 }}>
-              Desimaalipilkut sallitaan, ne muunnetaan pisteeksi automaattisesti.
+            <div style={{ color: '#a29bfe', fontSize: 12, marginTop: 4 }}>
+              Decimal commas are allowed and will be automatically converted to periods.
             </div>
             {touched.latitude && errors.latitude && (
-              <div style={{ color: '#b3261e', fontSize: 12, marginTop: 4 }}>{errors.latitude}</div>
+              <div style={{ color: '#ff6b6b', fontSize: 12, marginTop: 4 }}>{errors.latitude}</div>
             )}
           </div>
           <div>
-            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6 }}>
-              Pituusaste (−180…180)
+            <label style={{ display: 'block', fontWeight: 600, marginBottom: 6, color: '#f8f9fa' }}>
+              Longitude (−180…180)
             </label>
             <input
               type="text"
               inputMode="decimal"
               name="longitude"
-              placeholder="esim. 24.93"
+              placeholder="e.g. 24.93"
               value={formData.longitude}
               onChange={handleChange}
               onBlur={handleBlur}
               style={{
-                width: '100%', padding: '0.5rem 0.6rem', borderRadius: 8,
-                border: `1px solid ${touched.longitude && errors.longitude ? '#e35d6a' : '#d5d8dc'}`
+                width: '100%', 
+                padding: '0.5rem 0.6rem', 
+                borderRadius: 12,
+                border: `1px solid ${touched.longitude && errors.longitude ? 'rgba(231, 93, 106, 0.5)' : 'rgba(108, 92, 231, 0.3)'}`,
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#f8f9fa',
+                transition: 'all 0.3s ease'
               }}
             />
             {touched.longitude && errors.longitude && (
-              <div style={{ color: '#b3261e', fontSize: 12, marginTop: 4 }}>{errors.longitude}</div>
+              <div style={{ color: '#ff6b6b', fontSize: 12, marginTop: 4 }}>{errors.longitude}</div>
             )}
           </div>
         </div>
@@ -278,38 +305,56 @@ function BirthChartForm({ onDataFetched }) {
               onClick={handleUseLocation}
               disabled={loading}
               style={{
-                padding: '0.55rem 0.9rem', borderRadius: 8, border: '1px solid #cbd5e1',
-                background: '#f3f4f6', cursor: loading ? 'not-allowed' : 'pointer'
+                padding: '0.55rem 0.9rem', 
+                borderRadius: 12, 
+                border: '1px solid rgba(108, 92, 231, 0.3)',
+                background: 'rgba(108, 92, 231, 0.1)',
+                color: '#a29bfe',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                opacity: loading ? 0.5 : 1
               }}
             >
-              Käytä nykyistä sijaintia
+              Use current location
             </button>
             <button
               type="button"
               onClick={handleReset}
               disabled={loading}
               style={{
-                padding: '0.55rem 0.9rem', borderRadius: 8, border: '1px solid #e5e7eb',
-                background: '#fff', cursor: loading ? 'not-allowed' : 'pointer'
+                padding: '0.55rem 0.9rem', 
+                borderRadius: 12, 
+                border: '1px solid rgba(108, 92, 231, 0.3)',
+                background: 'rgba(255, 255, 255, 0.05)',
+                color: '#e9ecef',
+                cursor: loading ? 'not-allowed' : 'pointer',
+                transition: 'all 0.3s ease',
+                opacity: loading ? 0.5 : 1
               }}
             >
-              Tyhjennä
+              Reset
             </button>
           </div>
           <button
             type="submit"
             disabled={loading || !isValid}
             style={{
-              padding: '0.6rem 1rem', borderRadius: 8, border: '1px solidrgb(44, 236, 121)',
-              background: loading || !isValid ? '#93c5fd' : '#3b82f6', color: '#fff',
-              cursor: loading || !isValid ? 'not-allowed' : 'pointer', fontWeight: 600
+              padding: '0.6rem 1rem', 
+              borderRadius: 12, 
+              border: '1px solid rgba(108, 92, 231, 0.5)',
+              background: loading || !isValid ? 'rgba(108, 92, 231, 0.3)' : 'rgba(108, 92, 231, 0.4)',
+              color: '#f8f9fa',
+              cursor: loading || !isValid ? 'not-allowed' : 'pointer',
+              fontWeight: 600,
+              transition: 'all 0.3s ease',
+              boxShadow: loading || !isValid ? 'none' : '0 4px 15px rgba(108, 92, 231, 0.3)'
             }}
           >
-            {loading ? 'Ladataan…' : 'Näytä syntymäkartta'}
+            {loading ? 'Loading…' : 'Show birth chart'}
           </button>
         </div>
 
-        {error && <p style={{ color: '#b3261e', marginTop: '0.75rem' }}>{error}</p>}
+        {error && <p style={{ color: '#ff6b6b', marginTop: '0.75rem' }}>{error}</p>}
       </form>
     </section>
   );

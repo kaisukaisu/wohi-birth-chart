@@ -246,7 +246,18 @@ function BirthChartVisualization({ chartData }) {
   return (
     <div style={{ maxWidth: "960px", margin: "0 auto" }}>
       {outputUrl ? (
-        <div style={{ width: "100%", aspectRatio: "1 / 1", margin: "0 auto", background: "#fff", overflow: "hidden" }}>
+        <div style={{ 
+          width: "100%", 
+          aspectRatio: "1 / 1", 
+          margin: "0 auto", 
+          background: "rgba(26, 26, 46, 0.4)",
+          backdropFilter: "blur(10px)",
+          overflow: "hidden",
+          borderRadius: "20px",
+          border: "1px solid rgba(108, 92, 231, 0.3)",
+          boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(108, 92, 231, 0.1) inset",
+          padding: "1rem"
+        }}>
           <img
             src={outputUrl}
             alt="Natal Wheel Chart"
@@ -256,7 +267,7 @@ function BirthChartVisualization({ chartData }) {
       ) : (
         <>
           <div style={{ display: "flex", justifyContent: "flex-end", marginBottom: "0.5rem" }}>
-            <label style={{ fontSize: "0.9rem", color: "#444" }}>
+            <label style={{ fontSize: "0.9rem", color: "#e9ecef" }}>
               Zoom:&nbsp;
               <input
                 type="range"
@@ -265,6 +276,9 @@ function BirthChartVisualization({ chartData }) {
                 step="0.05"
                 value={scale}
                 onChange={(e) => setScale(Number(e.target.value))}
+                style={{
+                  accentColor: '#6c5ce7'
+                }}
               />
             </label>
           </div>
@@ -274,10 +288,12 @@ function BirthChartVisualization({ chartData }) {
               width: "100%",
               aspectRatio: "1 / 1",
               margin: "0 auto",
-              border: "1px solid #bbb",
-              borderRadius: "10px",
-              backgroundColor: "#fff",
-              boxShadow: "0 2px 10px rgba(0,0,0,0.08)",
+              border: "1px solid rgba(108, 92, 231, 0.3)",
+              borderRadius: "20px",
+              backgroundColor: "rgba(26, 26, 46, 0.4)",
+              backdropFilter: "blur(10px)",
+              boxShadow: "0 8px 32px rgba(0, 0, 0, 0.5), 0 0 20px rgba(108, 92, 231, 0.1) inset",
+              padding: "1rem"
             }}
           />
         </>
